@@ -5,7 +5,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 // Clona o repositório do GitHub
-                git url: 'https://github.com/William-Koerich/test-doutorie.git', branch: 'main'
+                git url: 'https://github.com/William-Koerich/teste-doutorie.git', branch: 'main'
             }
         }
     }
