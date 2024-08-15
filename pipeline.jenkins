@@ -1,1 +1,22 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                // Clona o repositório do GitHub
+                git url: 'https://github.com/William-Koerich/test-doutorie.git', branch: 'main'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Clonagem do repositório concluída com sucesso!'
+        }
+        failure {
+            echo 'Falha na clonagem do repositório.'
+        }
+    }
+}
 
