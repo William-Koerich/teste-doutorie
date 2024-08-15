@@ -4,8 +4,10 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                // Clona o repositório do GitHub
-                git url: 'https://github.com/William-Koerich/teste-doutorie.git', branch: 'main'
+                // Usa a chave SSH armazenada para clonar o repositório privado
+                sshagent(['github-ssh-key']) {
+                    sh 'git clone git@github.com:doutorie/drieonline_api.git'
+                }
             }
         }
     }
@@ -19,4 +21,3 @@ pipeline {
         }
     }
 }
-
