@@ -6,9 +6,18 @@ pipeline {
                 echo 'step 1'
             }
         }
-        stage('step2') {
-            steps {
-                echo 'step 2'
+        stage('Step2 - Paralelo') {
+            parallel {
+                stage('step2 A') {
+                    steps {
+                        echo 'step 2'
+                   }
+                }
+                stage('step2 B') {
+                    steps {
+                        echo 'step 2'
+                    }
+                }
             }
         }
         stage('step3') {
