@@ -4,7 +4,7 @@ pipeline {
     stages {
        stage('Clone Repository') {
             steps {
-                sshagent(['William-Koerich (Computador DRIE)']) {
+                sshagent(['992e4ec2-bb97-41ab-a711-41fda82486d1']) {
                     sh 'ssh-keyscan github.com >> ~/.ssh/known_hosts'
                     sh 'git clone git@github.com:doutorie/drieonline_api.git'
                 }
