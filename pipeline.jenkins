@@ -20,7 +20,6 @@ pipeline {
             steps {
                 dir('drieonline_api') {
                     script {
-                        // Verifica se o arquivo .env existe
                         if (!fileExists('.env')) {
                             if (fileExists('instalar-desenvolvimento.sh')) {
                                 sh './instalar-desenvolvimento.sh'
@@ -34,14 +33,26 @@ pipeline {
                 }
             }
         }
+        stage('Start Docker') {
+            steps {
+                dir('drieonline_api') {
+                    sh 'docker-compose --env-file .docker/.env up -d'
+                }
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                sh 'docker exec -ti api_php composer install'
+            }
+        }
     }
 
     post {
         success {
-            echo 'Clonagem do repositório e execução do script concluídas com sucesso!'
+            echo 'Pipeline concluída com sucesso!'
         }
         failure {
-            echo 'Falha na clonagem do repositório ou execução do script.'
+            echo 'Falha em alguma etapa do pipeline.'
         }
     }
 }
