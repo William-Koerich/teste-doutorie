@@ -66,7 +66,8 @@ pipeline {
         }
         stage('Install Dependencies') {
             steps {
-                sh 'docker exec -it api_php composer install'
+                // Remover a flag -t para evitar o erro de TTY
+                sh 'docker exec -i api_php composer install'
             }
         }
     }
