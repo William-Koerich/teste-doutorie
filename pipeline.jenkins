@@ -33,37 +33,37 @@ pipeline {
                 }
             }
         }
+        stage('Update MONGO_PORTA') {
+            steps {
+                dir('drieonline_api') {
+                    script {
+                        sh "sed -i 's/MONGO_PORTA=27017/MONGO_PORTA=27018/' .docker/.env"
+                        echo 'MONGO_PORTA alterada para 27018 no arquivo .docker/.env.'
+                    }
+                }
+            }
+        }
         stage('Check and Stop Conflicting Process') {
             steps {
                 script {
-                    // Verifica o processo que está utilizando a porta 27017 e encerra
-                    def pid = sh(script: "lsof -t -i :27017 || true", returnStdout: true).trim()
+                    // Verifica o processo que está utilizando a porta 27018 e encerra
+                    def pid = sh(script: "lsof -t -i :27018 || true", returnStdout: true).trim()
                     if (pid) {
-                        echo "A porta 27017 está em uso pelo processo com PID ${pid}. Encerrando o processo."
+                        echo "A porta 27018 está em uso pelo processo com PID ${pid}. Encerrando o processo."
                         sh "kill -9 ${pid}"
                     } else {
-                        echo 'A porta 27017 está livre.'
+                        echo 'A porta 27018 está livre.'
                     }
                 }
             }
         }
         stage('Start Docker') {
-    steps {
-        dir('drieonline_api') {
-            sh 'sleep 5' // Aguarda 5 segundos
-            script {
-                def pid = sh(script: "lsof -t -i :27017 || true", returnStdout: true).trim()
-                if (pid) {
-                    echo "A porta 27017 está em uso pelo processo com PID ${pid}. Encerrando o processo novamente."
-                    sh "kill -9 ${pid}"
-                } else {
-                    echo 'A porta 27017 está livre.'
+            steps {
+                dir('drieonline_api') {
+                    sh 'docker-compose --env-file .docker/.env up -d'
                 }
             }
-            sh 'docker-compose --env-file .docker/.env up -d'
         }
-    }
-}
         stage('Install Dependencies') {
             steps {
                 sh 'docker exec -ti api_php composer install'
