@@ -33,6 +33,20 @@ pipeline {
                 }
             }
         }
+        stage('Check and Stop Conflicting Containers') {
+            steps {
+                script {
+                    // Verifica se a porta 27017 está em uso e, se sim, para o container ou processo
+                    def isPortInUse = sh(script: "netstat -an | grep 27017 | grep LISTEN", returnStatus: true)
+                    if (isPortInUse == 0) {
+                        echo 'A porta 27017 está em uso. Parando o container que está utilizando a porta.'
+                        sh 'docker ps --filter "publish=27017" --format "{{.ID}}" | xargs docker stop || true'
+                    } else {
+                        echo 'A porta 27017 está livre.'
+                    }
+                }
+            }
+        }
         stage('Start Docker') {
             steps {
                 dir('drieonline_api') {
