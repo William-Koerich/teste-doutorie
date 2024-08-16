@@ -66,7 +66,7 @@ pipeline {
         }
         stage('Install Dependencies') {
             steps {
-                sh 'docker exec -ti api_php composer install'
+                sh 'docker exec -it api_php composer install'
             }
         }
     }
