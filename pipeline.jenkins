@@ -37,7 +37,7 @@ pipeline {
             steps {
                 script {
                     // Verifica o processo que está utilizando a porta 27017 e encerra
-                    def pid = sh(script: "lsof -t -i :27017", returnStdout: true).trim()
+                    def pid = sh(script: "lsof -t -i :27017 || true", returnStdout: true).trim()
                     if (pid) {
                         echo "A porta 27017 está em uso pelo processo com PID ${pid}. Encerrando o processo."
                         sh "kill -9 ${pid}"
