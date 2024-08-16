@@ -6,7 +6,6 @@ pipeline {
             steps {
                 script {
                     if (!fileExists('drieonline_api/.git')) {
-                        // Clona o repositório se a pasta não contiver um diretório .git
                         sshagent(['992e4ec2-bb97-41ab-a711-41fda82486d1']) {
                             sh 'ssh-keyscan github.com >> ~/.ssh/known_hosts'
                             sh 'git clone git@github.com:doutorie/drieonline_api.git'
@@ -21,11 +20,15 @@ pipeline {
             steps {
                 dir('drieonline_api') {
                     script {
-                        // Verifica se o script existe e é executável antes de tentar executá-lo
-                        if (fileExists('instalar-desenvolvimento.sh')) {
-                            sh 'bash ./instalar-desenvolvimento.sh'  // Executando o script com bash
+                        // Verifica se o arquivo .env existe
+                        if (!fileExists('.env')) {
+                            if (fileExists('instalar-desenvolvimento.sh')) {
+                                sh './instalar-desenvolvimento.sh'
+                            } else {
+                                error 'O script instalar-desenvolvimento.sh não foi encontrado!'
+                            }
                         } else {
-                            error 'O script instalar-desenvolvimento.sh não foi encontrado!'
+                            echo 'O arquivo .env já existe. Pulando a execução do script.'
                         }
                     }
                 }
