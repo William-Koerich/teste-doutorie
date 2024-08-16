@@ -23,7 +23,7 @@ pipeline {
                     script {
                         // Verifica se o script existe e é executável antes de tentar executá-lo
                         if (fileExists('instalar-desenvolvimento.sh')) {
-                            sh './instalar-desenvolvimento.sh'
+                            sh 'bash ./instalar-desenvolvimento.sh'  // Executando o script com bash
                         } else {
                             error 'O script instalar-desenvolvimento.sh não foi encontrado!'
                         }
