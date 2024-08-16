@@ -48,12 +48,22 @@ pipeline {
             }
         }
         stage('Start Docker') {
-            steps {
-                dir('drieonline_api') {
-                    sh 'docker-compose --env-file .docker/.env up -d'
+    steps {
+        dir('drieonline_api') {
+            sh 'sleep 5' // Aguarda 5 segundos
+            script {
+                def pid = sh(script: "lsof -t -i :27017 || true", returnStdout: true).trim()
+                if (pid) {
+                    echo "A porta 27017 está em uso pelo processo com PID ${pid}. Encerrando o processo novamente."
+                    sh "kill -9 ${pid}"
+                } else {
+                    echo 'A porta 27017 está livre.'
                 }
             }
+            sh 'docker-compose --env-file .docker/.env up -d'
         }
+    }
+}
         stage('Install Dependencies') {
             steps {
                 sh 'docker exec -ti api_php composer install'
